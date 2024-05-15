@@ -5,6 +5,11 @@ import { Typewriter } from "react-simple-typewriter";
 
 
 const Footer = () => {
+
+    // for daynamic copyright year
+    const currentYear = new Date().getFullYear();
+
+
     return (
         <div>
 <div className="bg-[#262626] mt-44">
@@ -78,7 +83,7 @@ const Footer = () => {
     </footer>
     <div className="px-10">
       <hr className="opacity-20" />
-      <p className="text-center text-sm text-white py-5">© 2024 {" "}
+      <p className="text-center text-sm text-white py-5">© {currentYear} {" "}
         <a>
           Bistro
           <span className="text-rose-500"> -Boss</span>
