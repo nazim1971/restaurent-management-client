@@ -1,9 +1,14 @@
+import Slider from "./Slider";
+import Swiper from "./Swip";
 
 
 const Home = () => {
     return (
-        <div className="text-4xl">
-            Hello world i am new
+        <div >
+           <div className="mb-20">
+            <Slider/>
+            <Swiper/>
+           </div>
         </div>
     );
 };
