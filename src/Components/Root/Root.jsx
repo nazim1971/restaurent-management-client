@@ -7,7 +7,9 @@ const Root = () => {
     return (
         <div>
             <Navber/>
+            <div className="w-[94%] mx-auto">
             <Outlet/>
+            </div>
             <div className="">
             <Footer/>
             </div>

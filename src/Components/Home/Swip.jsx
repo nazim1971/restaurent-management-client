@@ -10,20 +10,18 @@ import 'swiper/css/pagination';
 
 // import required modules
 import { Autoplay, Pagination } from 'swiper/modules';
+import Title from '../Shared/Title';
 
 const Swip = () => {
     return (
         <div className="my-20">
-            <div className="space-y-4 mx-auto text-center">
-                <p>
-                ---From 11:00am to 10:00pm---
-                </p>
-                <hr />
-                <a className="text-2xl font-semibold">
-                ORDER ONLINE
-                </a>
-                <hr />
-            </div>
+
+            <Title 
+            title={"---From 11:00am to 10:00pm---"}
+              subtitle={"ORDER ONLINE"}>
+              
+            </Title>
+
             <div>
             <Swiper
         slidesPerView={4}
