@@ -4,16 +4,16 @@ import { NavLink } from "react-router-dom";
 const Navber = () => {
 
     const navOptions = <>
-    <li> <NavLink> Home </NavLink> </li>
+    <li> <NavLink to='/' > Home </NavLink> </li>
     <li> <NavLink> Contact-us </NavLink> </li>
     <li> <NavLink> Dashboard </NavLink> </li>
-    <li> <NavLink> Our Menu </NavLink> </li>
-    <li> <NavLink> Our Shop </NavLink> </li>
+    <li> <NavLink to='/menu'> Our Menu </NavLink> </li>
+    <li> <NavLink to='/orderFood' > Order Food </NavLink> </li>
     </>
 
     return (
         <div>
-            <div className="navbar fixed  max-w-screen-xl opacity-70  z-10 bg-black text-white">
+            <div className="navbar fixed  max-w-screen-xl opacity-40  z-10 bg-black text-white">
   <div className="navbar-start">
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
