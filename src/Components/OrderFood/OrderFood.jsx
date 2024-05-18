@@ -28,7 +28,7 @@ const OrderFood = () => {
         <Cover img={"https://i.ibb.co/CB2ZmgB/da-2.jpg"} text={"Order Food"} />
       </div>
 
-      <Tabs selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
+      <Tabs  selectedIndex={tabIndex} onSelect={(index) => setTabIndex(index)}>
         <TabList className="text-center border-b">
           <Tab>SALAD</Tab>
           <Tab>PIZZA</Tab>
@@ -37,7 +37,7 @@ const OrderFood = () => {
           <Tab>DRINKS</Tab>
         </TabList>
 
-        <TabPanel>
+        <TabPanel  >
           <OrderTabs items={salad} />
         </TabPanel>
         <TabPanel>

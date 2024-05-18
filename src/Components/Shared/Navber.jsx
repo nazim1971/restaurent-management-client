@@ -9,6 +9,8 @@ const Navber = () => {
     <li> <NavLink> Dashboard </NavLink> </li>
     <li> <NavLink to='/menu'> Our Menu </NavLink> </li>
     <li> <NavLink to='/orderFood' > Order Food </NavLink> </li>
+    <li> <NavLink to='/login' > Login</NavLink> </li>
+    <li> <NavLink to='/register' > Register</NavLink> </li>
     </>
 
     return (
