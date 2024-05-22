@@ -1,21 +1,52 @@
-import { NavLink } from "react-router-dom";
+import { useContext } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
+import { FaCartShopping } from "react-icons/fa6";
+import useCarts from "../Hooks/useCarts";
 
 
 const Navber = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [cart] = useCarts()
+
+  const handleSignOut = () => {
+    logOut()
+      .then(() => {
+        navigate("/");
+      })
+      .catch();
+  };
 
     const navOptions = <>
     <li> <NavLink to='/' > Home </NavLink> </li>
     <li> <NavLink> Contact-us </NavLink> </li>
     <li> <NavLink> Dashboard </NavLink> </li>
+    <li> <NavLink to={'/dashboard/cart'}>
+      <button  className="flex gap-2 items-center"> <FaCartShopping />
+      <div className="badge badge-secondary">
+        +{cart?.length}
+      </div>
+      </button>
+      </NavLink> </li>
     <li> <NavLink to='/menu'> Our Menu </NavLink> </li>
+    {
+      user && <li> <NavLink to='/editProfile'> Edit Profiled </NavLink> </li>
+    }
     <li> <NavLink to='/orderFood' > Order Food </NavLink> </li>
-    <li> <NavLink to='/login' > Login</NavLink> </li>
-    <li> <NavLink to='/register' > Register</NavLink> </li>
+      {
+        user ? <li> <NavLink onClick={handleSignOut}  > Logout</NavLink> </li> : 
+        <>
+        <li> <NavLink to='/login' > Login</NavLink> </li>
+        <li> <NavLink to='/register' > Register</NavLink> </li>
+         </>
+      }
+    
     </>
 
     return (
-        <div>
-            <div className="navbar fixed  max-w-screen-xl opacity-40  z-10 bg-black text-white">
+        <div className="">
+            <div className="navbar fixed   max-w-screen-xl opacity-40  z-10 bg-black text-white">
   <div className="navbar-start">
     <div className="dropdown">
       <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

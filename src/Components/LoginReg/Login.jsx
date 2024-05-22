@@ -1,4 +1,4 @@
-import { useContext,  useEffect,  useRef, useState } from "react";
+import { useContext,  useEffect,  useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -6,10 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 import { loadCaptchaEnginge, LoadCanvasTemplate,  validateCaptcha } from 'react-simple-captcha';
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../Provider/AuthProvider";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
 
 
 
 const Login = () => {
+    const axiosPublic = useAxiosPublic()
     const { login ,googleLogin} = useContext(AuthContext);
   
     // show password
@@ -17,33 +19,51 @@ const Login = () => {
     const location = useLocation();
   const navigate = useNavigate();
   
+      // const captchaRef = useRef(null);
+      useEffect(()=>{
+        loadCaptchaEnginge(6);
+    },[])
+    const [ disabled, setDisabled] = useState(true)
+
+    const form = location.state?.from?.pathname || '/';
+    console.log('state in the location ', location.state);
   const {
     register,
     handleSubmit
   } = useForm()
-  const onSubmit = (data) => {
+  const onSubmit = async(data) => {
     const {email,password} = data
   
-    // login user
-    login(email, password)
-      .then((data) => {
-         if(data){
-          toast.success("Login Successfully");
-         }
-        navigate(location?.state ? location.state : "/");
-      })
-      .catch((err) => {
-        if (err.code === "auth/invalid-credential") {
-          toast.warning("Invalid user/password");
+    try {
+        const userData = await login(email, password);
+        console.log('User Data:', userData);
+        if (userData) {
+            toast.success("Login Successfully");
+            navigate(form);
         }
-      });
+    }catch (err) {
+        console.error('Login Error:', err);
+        if (err.code === "auth/invalid-credential") {
+            toast.warning("Invalid user/password");
+        } else {
+            toast.error("Login failed");
+        }
+    }
   }
   
   
     // google
     const handleGoogleLogin =  () => {
       try {
-          googleLogin();
+          googleLogin()
+          .then(res=>{
+            console.log(res.user);
+            const userInfo = {
+                email: res.user?.email,
+                name: res.user?.displayName
+            }
+            axiosPublic.post('/users',userInfo)
+          })
           toast.success("Login Successfully");
           navigate(location?.state || "/");
       } catch (error) {
@@ -53,19 +73,28 @@ const Login = () => {
   };
   
 
-    const captchaRef = useRef(null);
-    useEffect(()=>{
-        loadCaptchaEnginge(6);
-    },[])
-    const [ disabled, setDisabled] = useState(true)
+
     
-    const handleValidateCaptcha = () =>{
-        const value = captchaRef.current.value;
-        // console.log(value);
-        if(validateCaptcha(value)){
-            setDisabled(false)
-        }else{
-            setDisabled(true)
+    // const handleValidateCaptcha = e =>{
+    //     const value = e.target.value;
+       
+    //     console.log('Captcha Value:', value);
+    //     if(validateCaptcha(value)){
+    //         setDisabled(false)
+    //     }else{
+    //         setDisabled(true)
+    //     }
+    // }
+
+    const handleValidateCaptcha = e => {
+        const value = e.target.value;
+        console.log('Captcha Value:', value);
+        if (validateCaptcha(value)) {
+            console.log('Captcha is valid');
+            setDisabled(false);
+        } else {
+            console.log('Captcha is invalid');
+            setDisabled(true);
         }
     }
 
@@ -135,14 +164,14 @@ const Login = () => {
               <div className="mt-4">
                   <label className="block mb-2 text-sm font-medium " ><LoadCanvasTemplate /></label>
                   
-                  <input
-                  {...register("captcha",{required: true})} ref={captchaRef}
+                  <input onBlur={handleValidateCaptcha}
+                  {...register("captcha",{required: true})} 
                    className="block w-full px-4 py-2   border rounded-lg  focus:border-blue-400 focus:ring-opacity-40  focus:outline-none focus:ring focus:ring-blue-300" type="text" />
-                   <button onClick={handleValidateCaptcha} className="btn btn-xs btn-outline">Validate</button>
               </div>
-      
+              
               <div className="mt-6">
-                  <button disabled={disabled} type="submit" className="w-full btn btn-primary px-6 py-3 text-sm font-medium tracking-wide  capitalize transition-colors duration-300 transform  rounded-lg  focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
+              {/* disabled={disabled} */}
+                  <button  type="submit" className="w-full btn btn-primary px-6 py-3 text-sm font-medium tracking-wide  capitalize transition-colors duration-300 transform  rounded-lg  focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
                       Sign In
                   </button>
               </div>

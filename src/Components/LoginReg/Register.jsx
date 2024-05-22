@@ -5,10 +5,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
 import { AuthContext } from "../Provider/AuthProvider";
+import useAxiosPublic from "../Hooks/useAxiosPublic";
+import Swal from "sweetalert2";
 
 
 const Register = () => {
-
+    const axiosPublic = useAxiosPublic()
     const { createUser,updateUserProfile } = useContext(AuthContext);
     // show password
         const [pass, setPass] = useState(false);
@@ -17,6 +19,7 @@ const Register = () => {
     
       const {
         register,
+        reset,
         handleSubmit,
         formState: { errors },
         setError
@@ -56,6 +59,25 @@ const Register = () => {
       // Update user profile
       updateUserProfile(name, photo)
         .then(() => {
+          // create user entry in database
+          const userInfo = {
+            name: name,
+            email: email
+          }
+          axiosPublic.post('/users', userInfo)
+          .then(res=>{
+            if(res.data.insertedId){
+              console.log('user added to the database',);
+              reset()
+              Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500
+              });
+            }
+          })
           navigate(location?.state ? location.state : "/");
         })
         .catch((error) => {
